@@ -1,0 +1,43 @@
+docker run -i -t debian:jessie
+    -i --interactive : option for interract with container
+    -t - allocates terminal for container
+    -d - to run container as separate service
+    -p - declare ports (HOST:CONTAINER)
+    --name - container name
+    --rm - remove after stop/delete
+    --restart - retart options - no (default) | on-failure[:max-retries] | always | unless-stopped
+    -e - set environment
+    -v - to bin file system (name:/path/to/file)
+    -w - set working directory
+
+# example: 
+docker run -t -d -p 8080:80 nginx
+docker run -it -p 1234:8080 tomcat
+
+# to build image from Dockerfile in current folder:
+docker build -t test .
+
+
+# to enter to container:
+docker exec -it (container ID) bash/ (or bin/bash or /bin/sh)
+
+# to check container logs:
+docker logs (container_id)
+
+# stop container (-f - force)
+docker stop -f (cont ID) 
+# delete container
+docker rm 
+
+# run docker containers from docker-compose file:
+docker-compose up -f (file.yaml) 
+
+docker ps -aq 
+docker rm $(docker ps -aq)
+docker images 
+docker rmi (ID image)
+docker system prune
+docker exec-it (ID)
+docker inspect (ID)
+docker pull <name> 
+docker ps -a

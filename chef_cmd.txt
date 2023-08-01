@@ -1,0 +1,59 @@
+# Remote run:
+knife winrm 'chef_environment:<ENV> AND platform:windows' -x <username> -p <password> chef-client -o zabbix
+knife ssh <username>:test.example.domain "chef-client" -P <password> 
+
+# bootstrap command:
+knife bootstrap -o winrm <IP_address> -N <target_hostname> --msi-url http://hostname/chef-client-14.15.6-1-x64.msi -U <username> -P <password> --run-list "recipe[chef-client::default]" --environment <ENV>
+
+# to upload cookbook:
+knife cookbook upload <cookbook_name> --cookbook-path ~/some_path/cookbooks --environment <ENV>
+
+# to create cookbook:
+knife cookbook create <cookbook_name>
+knife cookbook upload <cookbook_name>
+
+# show version cookbook
+knife cookbook show <cookbook_name> 
+
+# create role
+knife role create ROLE_NAME (options)
+
+# assing role/recipe
+knife node edit <nodename>
+
+# search by name (you can find all servers, who has current role in defined environment):
+knife search "role:database_server AND chef_environment:prod" -a name
+
+# run list commands:
+# When running knife from the command prompt, a string should be surrounded by single quotes (' '). For example:
+knife node run_list set test-node 'recipe[iptables]'
+
+# to add role and recipes:
+knife node run_list add NODE_NAME 'role[ROLE_NAME]'
+knife node run_list add NODE_NAME 'recipe[COOKBOOK::RECIPE_NAME],recipe[COOKBOOK::RECIPE_NAME],role[ROLE_NAME]'
+
+# add a recipe with a cookbook
+# to add a recipe to a run-list using the cookbook format, enter:
+knife node run_list add NODE_NAME 'COOKBOOK::RECIPE_NAME'
+
+# add the default recipe
+# to add the default recipe of a cookbook to a run-list, enter:
+knife node run_list add NODE_NAME 'COOKBOOK'
+knife node run_list remove NODE_NAME 'role[ROLE_NAME]'
+knife node run_list remove NODE_NAME 'recipe[COOKBOOK::RECIPE_NAME]'
+
+# show build info:
+knife node show build
+# show to run list:
+knife node show <node name> -r
+# same in json format:
+knife node show <node name> -F json
+
+# run cookbook manually on client:
+chef-client -o java 
+
+
+# sometimes you can face with issue with bootstrapping Windows VM like "can't find command", for example with broken flag: --msi-url
+# to resolve:
+chef gem install knife windows -v 1.5.0
+chef shell-init powershell | Invoke-Expression

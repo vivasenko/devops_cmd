@@ -1,0 +1,11 @@
+# put list of running services to the file:
+Get-Service > C://path/file.txt 
+
+# check status of concrete service
+Get-Service myService 
+Get-Service | Where-Object {$_.Name -like "*myService*"}
+
+# check service by status
+Get-Service | Where-Object {$_.Status -eq "Running"}
+Get-Service | Where-Object {$_.Status -eq "Stopped"}
+

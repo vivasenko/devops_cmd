@@ -1,0 +1,59 @@
+#!/bin/bash - header for any bash script
+
+# simple counter example:
+    for (( i=1; i <= 10; i++ ))
+    do 
+    echo "number is $i"
+    done
+
+# conditions examples:
+    if grep <username> /etc/passwd
+    then
+    echo ""
+    else (elif, else)
+    echo ""
+    fi
+
+    for var in list (in first second third fourth fifth)
+    do
+    done
+
+    while
+    do
+    done
+
+# For script debug
+# will show which command and then result, very useful
+set -x 
+
+#to stop the script on error
+set -e
+
+#to disable previous command
+set +e
+
+#file check:
+
+-d file          #check if file exists and if it is a directory
+-e file          #check if the file exist
+-f file          #check if file exist and if it is a file
+-r file          #check if file exist and if it is readable
+-s file          #check if file exist and if it is not empty
+-w file          #check if file exist and if it is writable
+-x file          #check if file exist and if it is executable
+file1 -nt file2  #check if file1 newer than file2
+file1 -ot file2  #check if file1 older than file2
+-O file          #check if file exist and current user is owner
+-G file          #check if file exist and his group same as user group
+
+# example:
+    #!/bin/bash
+    mydir=/home/likegeeks
+    if [ -d $mydir ]
+    then
+    echo "The $mydir directory exists"
+    cd $ mydir
+    ls
+    else
+    echo "The $mydir directory does not exist"
+    fi

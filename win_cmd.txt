@@ -1,0 +1,6 @@
+# get list of installed programs and features:
+wmic product get name,version > somepath/file.txt
+wmic product get name,version /format:csv > c:\Apps.csv
+
+# to delete service:
+sc delete ServiceName
