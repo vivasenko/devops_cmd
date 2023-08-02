@@ -1,0 +1,13 @@
+# All commands presented above can be executed using:
+$ fail2ban-client <COMMAND>
+# or by typing them in the interactive console available with:
+$ fail2ban-client -i
+    start		                        # starts the server and the jails
+    reload		                        # reloads the configuration
+    status		                        # gets the current status of the server
+    start <JAIL>                        # starts the jail <JAIL>
+    stop <JAIL>		                    # stops the jail <JAIL>
+    status <JAIL>		                # gets the current status of <JAIL>
+    set <JAIL> banip <IP>	            # manually Ban <IP> for <JAIL>
+    set <JAIL> unbanip <IP>	        	# manually Unban <IP> in <JAIL>
+    set <JAIL> maxretry <RETRY>     	# sets the number of failures <RETRY> before banning the host for <JAIL>

@@ -1,0 +1,97 @@
+# to enter influx db:
+influx
+influx -host 127.0.0.1 -port 8086
+
+> --- list all databases
+> SHOW DATABASES
+> --- show all measurements
+> SHOW MEASUREMENTS
+> --- show measurements where machine tag = 'unit42'
+> SHOW MEASUREMENTS WHERE "machine" = 'unit42'
+> --- show measurements that start with 'temp'
+> SHOW MEASUREMENTS WITH MEASUREMENT =~ /temp.*/
+> --- show all running queries
+> SHOW QUERIES
+> --- show all retention policies on a database
+> SHOW RETENTION POLICIES ON "test"
+> --- show all users in InfluxDB
+> SHOW USERS
+
+> --- show all series
+> show series from temperature
+key
+---
+temperature,machine=unit42,type=assembly
+temperature,machine=unit43,type=assembly
+temperature,machine=unit43,type=not_assembly
+> --- show series from machine unit42
+> SHOW SERIES FROM temperature WHERE machine = 'unit42'
+key
+---
+temperature,machine=unit42,type=assembly
+> -- show estimated cardinality of the series on current database
+> SHOW SERIES CARDINALITY
+-- show estimated cardinality of the series on specified database
+> SHOW SERIES CARDINALITY ON mydb
+cardinality estimation
+
+> --- show tag keys
+> SHOW TAG KEYS
+name: temperature
+tagKey
+------
+machine
+type
+> --- show all tag keys from the temperature measurement
+> SHOW TAG KEYS FROM "temperature"
+> --- show all tag keys where the machine key = 'unit42'
+> SHOW TAG KEYS WHERE "machine" = 'unit42'
+> --- show all tag values across all measurements for the machine tag
+> SHOW TAG VALUES WITH KEY = "machine"
+name: temperature
+key     value
+---     -----
+machine unit42
+machine unit43
+> --- show tag values for a specific database and measurement
+> SHOW TAG VALUES ON test FROM temperature WITH KEY = "machine"
+
+> SHOW FIELD KEYS ON test
+name: temperature
+fieldKey fieldType
+-------- ---------
+external float
+internal float
+
+> SHOW MEASUREMENT CARDINALITY
+cardinality estimation
+----------------------
+1
+> SHOW MEASUREMENT EXACT CARDINALITY ON test
+count
+-----
+1
+
+> --- create a temperature point
+> INSERT temperature,machine=unit42,type=assembly external=26,internal=38
+> --- select temperature for unit42
+> SELECT * FROM temperature WHERE "machine" = 'unit42'
+> --- select specific fields and tags from measurement, NOTE: at least one field must be included
+> SELECT "internal"::field, "machine"::tag FROM temperature WHERE "machine" = 'unit42'
+> --- delete metrics from temperature measurement
+> DELETE FROM "temperature" WHERE time < '2000-01-01T00:00:00Z'
+> --- drop the temperature measurement
+> DROP MEASUREMENT "temperature"
+
+> --- explain the logic behind the query
+> EXPLAIN SELECT * FROM temperature
+QUERY PLAN
+----------
+EXPRESSION: <nil>
+AUXILIARY FIELDS: external::float, internal::float, machine::tag, type::tag
+NUMBER OF SHARDS: 1
+NUMBER OF SERIES: 3
+CACHED VALUES: 0
+NUMBER OF FILES: 6
+NUMBER OF BLOCKS: 6
+SIZE OF BLOCKS: 204
