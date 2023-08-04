@@ -1,0 +1,51 @@
+# Centos 7 disk extend
+
+# to check current partitions
+fdisk -l 
+# Turn off OS, add more space to the current disk and turn on the VM, fdisk command should show you that /dev/sda disk size was increased.
+
+# create new partition:
+fdisk /dev/sda
+n #add new partition
+# Partition type:
+# p primary (2 primary, 0 extended, 2 free)
+# e extended
+Select (default p): p 
+Partition number (3,4, default 3): 3
+# next choose first and last sectors (default)
+# set partition type: t
+Hex code (type L to list all codes): 8e 
+# Command (m for help): p (show partition table)
+# reboot vm and check partitions
+reboot
+fdisk -l
+
+# create physical volume
+pvcreate /dev/sda3
+
+# validate:
+vgdisplay
+
+# extend volume group:
+vgextend centos /dev/sda3
+
+# check available physical volumes:
+pvscan
+
+# check LV path:
+lvdisplay
+
+# extend logical volume:
+lvextend -l+100%FREE /dev/centos/root
+
+# scan volume groups
+vgscan
+
+# activate all inactive volume groups
+vgchange -ay
+
+# extend file system 
+xfs_growfs /dev/mapper/centos-root
+
+# check if volume was extented:
+df -h
