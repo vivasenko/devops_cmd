@@ -1,0 +1,27 @@
+# WSUS troubleshooting
+# Failed on updates with error 0x80242fff, or get stuck, open cmd and use next commands:
+
+net stop wuauserv
+net stop cryptSvc
+net stop bits
+net stop msiserver
+ren C:\Windows\SoftwareDistribution SoftwareDistribution.old
+ren C:\Windows\System32\catroot2 catroot2.old
+net start wuauserv
+net start cryptSvc
+net start bits
+net start msiserver
+exit
+
+
+# If server not appears in WSUS server:
+Reset SusClientId:
+#cmd
+net stop wuauserv
+
+#Delete the value in registry key " SusClientId " and "SusClientIDValidation" locates in:
+HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate
+
+#cmd 
+net start wuauserv
+wuauclt.exe /resetauthorization /detectnow
