@@ -1,0 +1,9 @@
+# nmap network discovery
+# Show operating system and ports opened
+nmap -O 20.25.209.119
+
+#scan defined ports (or range) with speed T4
+nmap -p 1-65535 -T4 20.25.209.119
+
+#Stealth scan:
+nmap -sS -T4 20.25.209.119
