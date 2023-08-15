@@ -1,0 +1,33 @@
+#Find the $menuentry_id_option for the submenu:
+$ grep submenu /boot/grub/grub.cfg
+#submenu 'Advanced options for Debian GNU/Linux' $menuentry_id_option 'gnulinux-advanced-38ea4a12-6cfe-4ed9-a8b5-036295e62ffc' {
+
+#Find the $menuentry_id_option for the menu entry for the kernel you want to use:
+$ grep gnulinux /boot/grub/grub.cfg
+menuentry 'Debian GNU/Linux' --class debian --class gnu-linux --class gnu --class os $menuentry_id_option 'gnulinux-simple-38ea4a12-6cfe-4ed9-a8b5-036295e62ffc' {
+submenu 'Advanced options for Debian GNU/Linux' $menuentry_id_option 'gnulinux-advanced-38ea4a12-6cfe-4ed9-a8b5-036295e62ffc' {
+    menuentry 'Debian GNU/Linux, with Linux 4.18.0-0.bpo.1-rt-amd64' --class debian --class gnu-linux --class gnu --class os $menuentry_id_option 'gnulinux-4.18.0-0.bpo.1-rt-amd64-advanced-38ea4a12-6cfe-4ed9-a8b5-036295e62ffc' {
+    menuentry 'Debian GNU/Linux, with Linux 4.18.0-0.bpo.1-rt-amd64 (recovery mode)' --class debian --class gnu-linux --class gnu --class os $menuentry_id_option 'gnulinux-4.18.0-0.bpo.1-rt-amd64-recovery-38ea4a12-6cfe-4ed9-a8b5-036295e62ffc' {
+    menuentry 'Debian GNU/Linux, with Linux 4.18.0-0.bpo.1-amd64' --class debian --class gnu-linux --class gnu --class os $menuentry_id_option 'gnulinux-4.18.0-0.bpo.1-amd64-advanced-38ea4a12-6cfe-4ed9-a8b5-036295e62ffc' {
+    menuentry 'Debian GNU/Linux, with Linux 4.18.0-0.bpo.1-amd64 (recovery mode)' --class debian --class gnu-linux --class gnu --class os $menuentry_id_option 'gnulinux-4.18.0-0.bpo.1-amd64-recovery-38ea4a12-6cfe-4ed9-a8b5-036295e62ffc' {
+    menuentry 'Debian GNU/Linux, with Linux 4.17.0-0.bpo.1-amd64' --class debian --class gnu-linux --class gnu --class os $menuentry_id_option 'gnulinux-4.17.0-0.bpo.1-amd64-advanced-38ea4a12-6cfe-4ed9-a8b5-036295e62ffc' {
+    menuentry 'Debian GNU/Linux, with Linux 4.17.0-0.bpo.1-amd64 (recovery mode)' --class debian --class gnu-linux --class gnu --class os $menuentry_id_option 'gnulinux-4.17.0-0.bpo.1-amd64-recovery-38ea4a12-6cfe-4ed9-a8b5-036295e62ffc' {
+    menuentry 'Debian GNU/Linux, with Linux 4.9.0-8-amd64' --class debian --class gnu-linux --class gnu --class os $menuentry_id_option 'gnulinux-4.9.0-8-amd64-advanced-38ea4a12-6cfe-4ed9-a8b5-036295e62ffc' {
+    menuentry 'Debian GNU/Linux, with Linux 4.9.0-8-amd64 (recovery mode)' --class debian --class gnu-linux --class gnu --class os $menuentry_id_option 'gnulinux-4.9.0-8-amd64-recovery-38ea4a12-6cfe-4ed9-a8b5-036295e62ffc' {
+
+#Comment out your current default grub in /etc/default/grub and replace it with the sub-menu's $menuentry_id_option from step one, and the selected kernel's $menuentry_id_option from step two separated by >.
+#In my case the modified GRUB_DEFAULT is:
+#   #GRUB_DEFAULT=0
+GRUB_DEFAULT="gnulinux-advanced-38ea4a12-6cfe-4ed9-a8b5-036295e62ffc>gnulinux-4.18.0-0.bpo.1-amd64-advanced-38ea4a12-6cfe-4ed9-a8b5-036295e62ffc"
+# Update grub to make the changes. For Debian this is done like so:
+
+$ sudo update-grub
+
+#Reboot, uname -a
+
+#Changing this back to the most recent kernel is as simple as commenting out the new line and uncommenting #GRUB_DEFAULT=0:
+  GRUB_DEFAULT=0
+   #GRUB_DEFAULT="gnulinux-advanced-38ea4a12-6cfe-4ed9-a8b5-036295e62ffc>gnulinux-4.18.0-0.bpo.1-amd64-advanced-38ea4a12-6cfe-4ed9-a8b5-036295e62ffc"
+
+#then rerunning update-grub:
+$ sudo update-grub
