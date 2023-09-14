@@ -1,0 +1,41 @@
+####Installing kubectl
+# MacOS:
+curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/darwin/amd64/kubectl
+chmod +x ./kubectl
+sudo mv ./kubectl /usr/local/bin/kubectl
+
+brew install kubectl
+
+# Linux:
+curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+chmod +x ./kubectl
+sudo mv ./kubectl /usr/local/bin/kubectl
+
+# Windows:
+curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/windows/amd64/kubectl.exe
+
+# validation
+kubectl version
+
+
+#### Installing minikube
+# MacOS:
+brew install minikube
+
+# Linux:
+curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 && chmod +x minikube && sudo mv minikube /usr/local/bin/
+
+# Windows:
+# Download from here: 
+# https://storage.googleapis.com/minikube/releases/latest/minikube-windows-amd64.exe
+# rename file to minikube.exe and add it to path.
+
+# validation:
+minikube version
+
+### Starting minikube
+minikube start --vm-driver=virtualbox
+
+# if there is a problem on a Mac
+brew install hyperkit
+minikube start --vm-driver=hyperkit
