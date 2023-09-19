@@ -1,0 +1,83 @@
+kubectl run db --image mongo
+
+###  CREATE ###
+kubectl create -f db.yml  ### only creates new resources, if resource exist, it will do nothing (you will get an error)
+kubectl create -f go-demo-2.yml --record --save-config   #--save-config - save configuration back to file
+kubectl apply -f db.yml   ### create or updates resources
+
+
+### GET ###
+kubectl get pods (svc/deployment/ingress...)
+kubectl get all
+kubectl get rs      #get replicaset
+kubectl get pods -o wide
+kubectl get pods -o json
+kubectl get pods -o yaml
+kubectl get deployments --show-labels  #show labels))
+kubectl get deployments -l type=db,vendor=MongoLabs
+kubectl get -f db.yml
+kubectl get -f go-demo-2.yml \
+    -o jsonpath="{.spec.containers[*].name}"
+kubectl get pods --show-labels
+kubectl get ep go-demo-2 -o yaml            #get endpoint from in yaml view 
+
+kubectl get pods --no-headers -o=custom-columns=NAME:.metadata.name -l type=db,service=go-demo-2    
+# --no-headers = output without "NAME READY STATUS RESTARTS AGE"
+# -o=custom-columns=NAME.metadata.name - show only pods names
+# -l type=db,service=go-demo-2 - filter by type/service
+ 
+
+### DESCRIBE ###
+kubectl describe pod db
+kubectl describe -f go-demo-2.yml
+kubectl describe svc go-demo-2-db
+
+
+### EDIT ### 
+kubectl edit -f deployment.yaml
+kubectl set image -f go-demo-2-db.yml db=mongo:3.4 
+    
+### EXEC ###
+kubectl exec db -- ps aux                    #run command inside the pod
+kubectl exec -it -c db go-demo-2 -- ps auxs  #if you have multiple pods inside the container db, where: db - container name, go-demo-2 pod name
+kubectl exec -it db -- sh                    # run shell inside container 
+kubectl exec -- env                          #to show all environment variables 
+
+### LOGS ###
+kubectl logs db     #get pod (container) logs : add "-f" = in real time
+kubectl logs go-demo-2 -c db   #logs from multiple container pod:
+
+
+### LABELS:
+kubectl label $POD_NAME service-             #remove label service
+kubectl label $POD_NAME service=go-demo-2    #re-add label
+
+# port forwarding in a background:
+nohup kubectl port-forward service/go-demo-2-api --address 0.0.0.0  3000:8080 > /dev/null 2>&1 &
+
+### ROLLOUT ### 
+kubectl rollout status -w -f go-demo-2-api.yml   #w - continuously watch the rollout process and provide real-time updates. 
+kubectl rollout history -f go-demo-2-api.yml
+kubectl rollout undo -f go-demo-2-api.yml        #rollback deployment to previous version
+kubectl rollout undo -f go-demo-2-api.yml --to-revision=2   #rollback to revision 2 which you can find with rollout history
+
+
+### DELETE ###
+kubectl delete pod db
+
+# remove replicas, --cascade=orphan argument to prevent Kubernetes from removing all the downstream objects.
+kubectl delete -f go-demo-2.yml --cascade=orphan    
+
+
+
+### SCALE ####
+kubectl scale deployment go-demo-2-api --replicas 8 --record
+
+
+
+
+### Some trics
+### Update all deloyments by labels:
+kubectl get deployments --show-labels
+kubectl get deployments -l type=db,vendor=MongoLabs 
+kubectl set image deployments -l type=db,vendor=MongoLabs db=mongo:3.4 --record

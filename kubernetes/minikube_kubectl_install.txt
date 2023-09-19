@@ -39,3 +39,6 @@ minikube start --vm-driver=virtualbox
 # if there is a problem on a Mac
 brew install hyperkit
 minikube start --vm-driver=hyperkit
+minikube start \
+    --vm-driver=virtualbox \
+    --kubernetes-version="v1.14.0"

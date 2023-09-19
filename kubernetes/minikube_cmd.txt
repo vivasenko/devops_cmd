@@ -1,3 +1,15 @@
 minikube status
 
+# to open dashboard (UI) in browser
 minikube dashboard
+
+# command to output the environment variables
+minikube docker-env
+
+minikube ssh
+docker container ls
+exit
+
+
+# verify pointer of kubectl:
+kubectl config current-context
