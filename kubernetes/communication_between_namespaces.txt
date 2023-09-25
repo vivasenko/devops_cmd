@@ -1,0 +1,25 @@
+### EXAMPLE:
+kubectl run test \
+    --image=alpine \
+    sleep 10000
+kubectl exec -it test -- curl \
+    "http://go-demo-2-api:8080/demo/hello"
+
+
+#When we create a Service, it creates a few DNS entries. 
+#One of them corresponds to the name of the Service.
+
+#So, the go-demo-2-api Service created a DNS based on that name. 
+#Actually, the full DNS entry is go-demo-2-api.svc.cluster.local. 
+#Both resolve to the same service go-demo-2-api which, in this case, runs in the default Namespace.
+
+#The third DNS entry we got is in the format <service-name>.<namespace-name>.svc.cluster.local. 
+#In our case, that is go-demo-2-api.default.svc.cluster.local. 
+#Or, if we prefer a shorter version, we could use go-demo-2-api.default.
+#In most cases, there is no good reason to use the <service-name>.<namespace-name> format when communicating with Services within the same Namespace.
+
+kubectl exec -it test -- curl \
+    "http://go-demo-2-api:8080/demo/hello"
+
+kubectl exec -it test -- curl \
+    "http://go-demo-2-api.testing:8080/demo/hello"

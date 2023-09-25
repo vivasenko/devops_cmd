@@ -1,0 +1,51 @@
+#Install or verify if Openssl installed:
+openssl version
+
+#Generate private key (jdoe.key.):
+openssl genrsa -out keys/jdoe.key 2048
+
+#Generate a certificate (jdoe.csr):
+openssl req -new \
+    -key keys/jdoe.key \
+    -out keys/jdoe.csr \
+    -subj "/CN=jdoe/O=devs"
+
+My minikube certs are stored here:
+ls -1 ~/.minikube/ca.*
+
+#Generate the final certificate by approving the certificate sign request jdoe.csr:
+Openssl x509 -req \
+    -in keys/jdoe.csr \
+    -CA /Users/a1/.minikube/ca.crt \
+    -CAkey /Users/a1/.minikube/ca.key \
+    -CAcreateserial \
+    -out keys/jdoe.crt \
+    -days 365
+
+#John does not need the “jdoe.csr” file. We used it only to generate the final certificate “jdoe.crt”. 
+
+# Equipped with:
+# The new certificate (jdoe.crt)
+# The key (jdoe.key)
+# The cluster authority (ca.crt)
+# The address of the server,
+# John can configure his kubectl installation. 
+
+#John need to set the new cluster:
+kubectl config set-cluster jdoe \
+    --certificate-authority \
+    /Users/a1/.minikube/ca.crt \
+    --server $SERVER
+
+#Next, he’ll have to set the credentials using the certificate and the key we created for him.
+kubectl config set-credentials jdoe \
+    --client-certificate keys/jdoe.crt \
+    --client-key keys/jdoe.key
+
+#Create new context:
+
+kubectl config set-context jdoe \
+    --cluster jdoe \
+    --user jdoe
+
+kubectl config use-context jdoe

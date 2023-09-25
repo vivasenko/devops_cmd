@@ -1,0 +1,13 @@
+kubectl create cm my-config \
+    --from-file=prometheus-conf.yaml
+
+kubectl create cm my-config \
+    --from-file=cm/prometheus-conf.yml \
+    --from-file=cm/prometheus.yml
+
+kubectl create cm my-config \
+    --from-literal=something=else \
+    --from-literal=weather=sunny
+
+kubectl create cm my-config \
+    --from-file=cm    #folder

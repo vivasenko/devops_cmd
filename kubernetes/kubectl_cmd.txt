@@ -1,15 +1,58 @@
 kubectl run db --image mongo
-
+#create docker pod and run command inside:s
+kubectl run docker \
+    --image=docker:17.11  --restart=Never \
+    docker image ls
 ###  CREATE ###
 kubectl create -f db.yml  ### only creates new resources, if resource exist, it will do nothing (you will get an error)
 kubectl create -f go-demo-2.yml --record --save-config   #--save-config - save configuration back to file
-kubectl apply -f db.yml   ### create or updates resources
 
+## CREATE CONFIG MAP
+#Create config map from multiple files:
+kubectl create cm my-config \
+    --from-file=cm/prometheus-conf.yml \
+    --from-file=cm/prometheus.yml
+#config from all files in folder:
+kubectl create cm my-config \
+    --from-file=cmkubectl create cm my-config \
+    --from-file=cm
+kubectl create cm my-config \
+    --from-literal=something=else \
+    --from-literal=weather=sunny
+kubectl create cm my-config \
+    --from-env-file=my-env-file.yml    
+
+#Create secrets:   #we can use  --from-env-file, --from-file, and --from-literal as sources
+kubectl create secret \
+    generic my-creds \
+    --from-literal=username=jdoe \
+    --from-literal=password=incognito
+
+kubectl apply -f db.yml   ### create or updates resources
+kubectl create ns testing ## create namespace
+
+### NAMESPACES:
+#create new context:
+kubectl config set-context testing \
+    --namespace testing \
+    --cluster k3d-mycluster \
+    --user admin@k3d-mycluster
+#or:
+kubectl config set-context testing \
+    --namespace testing \
+    --cluster minikube \
+    --user minikube
+kubectl config view
+#to switch:
+kubectl config use-context testing
+
+kubectl auth can-i get pods --as jdoe
 
 ### GET ###
 kubectl get pods (svc/deployment/ingress...)
 kubectl get all
 kubectl get rs      #get replicaset
+kubectl get ing     #get ingress
 kubectl get pods -o wide
 kubectl get pods -o json
 kubectl get pods -o yaml
@@ -25,12 +68,21 @@ kubectl get pods --no-headers -o=custom-columns=NAME:.metadata.name -l type=db,s
 # --no-headers = output without "NAME READY STATUS RESTARTS AGE"
 # -o=custom-columns=NAME.metadata.name - show only pods names
 # -l type=db,service=go-demo-2 - filter by type/service
+kubectl get cm my-config -o yaml
+kubectl get ns
+kubectl --namespace kube-system get all
+kubectl get clusterroles
  
+#decode k8s secret:
+kubectl get secret my-creds \
+    -o jsonpath="{.data.username}" \
+    | base64 --decode
 
 ### DESCRIBE ###
 kubectl describe pod db
 kubectl describe -f go-demo-2.yml
 kubectl describe svc go-demo-2-db
+kubectl describe cm my-config
 
 
 ### EDIT ### 
@@ -41,6 +93,7 @@ kubectl set image -f go-demo-2-db.yml db=mongo:3.4
 kubectl exec db -- ps aux                    #run command inside the pod
 kubectl exec -it -c db go-demo-2 -- ps auxs  #if you have multiple pods inside the container db, where: db - container name, go-demo-2 pod name
 kubectl exec -it db -- sh                    # run shell inside container 
+kubectl exec docker -it -- sh
 kubectl exec -- env                          #to show all environment variables 
 
 ### LOGS ###
@@ -57,6 +110,7 @@ nohup kubectl port-forward service/go-demo-2-api --address 0.0.0.0  3000:8080 > 
 
 ### ROLLOUT ### 
 kubectl rollout status -w -f go-demo-2-api.yml   #w - continuously watch the rollout process and provide real-time updates. 
+kubectl rollout status deploy <DEPLOYMENT_NAME> - watch deployment status
 kubectl rollout history -f go-demo-2-api.yml
 kubectl rollout undo -f go-demo-2-api.yml        #rollback deployment to previous version
 kubectl rollout undo -f go-demo-2-api.yml --to-revision=2   #rollback to revision 2 which you can find with rollout history
@@ -64,6 +118,7 @@ kubectl rollout undo -f go-demo-2-api.yml --to-revision=2   #rollback to revisio
 
 ### DELETE ###
 kubectl delete pod db
+kubectl delete ns testing
 
 # remove replicas, --cascade=orphan argument to prevent Kubernetes from removing all the downstream objects.
 kubectl delete -f go-demo-2.yml --cascade=orphan    
@@ -81,3 +136,7 @@ kubectl scale deployment go-demo-2-api --replicas 8 --record
 kubectl get deployments --show-labels
 kubectl get deployments -l type=db,vendor=MongoLabs 
 kubectl set image deployments -l type=db,vendor=MongoLabs db=mongo:3.4 --record
+kubectl set image \
+    deployment/go-demo-2-api \
+    api=vfarcic/go-demo-2:2.0 \
+    --record
