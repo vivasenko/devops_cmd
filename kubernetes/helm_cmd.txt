@@ -1,0 +1,33 @@
+helm install dashboard kubernetes-dashboard/kubernetes-dashboard -n monitoring --create-namespace
+helm upgrade dashboard kubernetes-dashboard/kubernetes-dashboard -n monitoring --install --create-namespace --values dashboard.yaml
+
+helm list -n monitoring
+helm history dashboard -n monitoring
+
+# Check values:
+helm get values dashboard -n monitoring
+
+
+helm upgrade dashboard kubernetes-dashboard/kubernetes-dashboard -n monitoring --values dashboard.yaml --set replicaCount=2
+helm upgrade dashboard kubernetes-dashboard/kubernetes-dashboard -n monitoring --values dashboard.yaml --values default-replicaCount.yaml
+#flags:
+--wait   #wait and check result of helm upgrade command
+--timeout #seconds, maximum time to wait to meet all conditions, default=300 seconds
+--dry-run #could be attached to upgrade or install/delete command for simulation run.
+
+#rollback:
+
+helm rollback dashboard -n monitoring
+helm rollback dashboard -n monitoring --wait --timeout 60s
+
+#to defined version:
+helm rollback dashboard 1 -n monitoring --wait --timeout 60s
+
+helm uninstall dashboard -n monitoring --keep-history
+# with --keep-history flaf we delete the pod, but we can rollback to previous versions
+#with next commands:
+helm history dashboard -n monitoring
+helm rollback dashboard 1 -n monitoring
+
+# create chart app
+helm create app

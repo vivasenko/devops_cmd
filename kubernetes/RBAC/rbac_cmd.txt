@@ -1,0 +1,25 @@
+kubectl create -f rb-dev.yml \
+    --record --save-config
+
+kubectl --namespace dev auth can-i \
+    create deployments --as jdoe
+
+kubectl --namespace dev auth can-i \
+    delete deployments --as jdoe
+
+kubectl --namespace dev auth can-i \
+    "*" "*" --as jdoe
+
+kubectl create -f rb-jdoe.yml \
+    --record --save-config
+
+kubectl --namespace jdoe auth can-i \
+    "*" "*" --as jdoe
+
+
+
+kubectl describe clusterrole admin
+
+# verify if you can delete deployments
+kubectl --namespace default auth can-i \
+    delete deployments --as jdoe
