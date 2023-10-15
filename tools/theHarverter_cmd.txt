@@ -1,0 +1,4 @@
+#The Harvester for gathering information. To found data in google, example:
+theHarvester -d starbucks.com -b google
+theHarvester -d starbucks.com -b netcraft
+

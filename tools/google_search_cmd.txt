@@ -1,0 +1,30 @@
+#In Google search:
+
+#to search in title:
+intitle:"webcamxp"
+
+#to search in site and in url:
+frenchpress site:starbucks.com inurl:admin
+
+#to search in site and and inside a body of page:
+site:starbucks.com intext:admin
+
+#search all public available pdfs:
+site:starbucks.com filetype:pdf
+
+#search login page on site in title
+site:starbucks intitle:login
+#
+intitle:"WEBCAM 7" -inurl:/admin.html
+
+#search by filetypes:
+filetype:env "DB_PASSWORD"
+
+#search logfiles
+"authentication failure; logname=" filetype:log
+
+#search for registry
+filetype:reg reg HKEY_CURRENT_USERR username
+
+#search in all urls next path:
+allinurl:tsweb/default.html
