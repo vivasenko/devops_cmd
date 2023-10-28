@@ -1,0 +1,44 @@
+#to secure delete file we can user "shred" command, which designed to shred individual files, not directories. If we want to securely delete all files within a directory, we can use the combination of the `find` and `shred` commands. This command will find all files within the specified directory and its subdirectories, and shred each file individually.
+shred <filename>
+
+#command to inspect the user:
+finder <username>
+
+#to show only head of file
+head <filename>
+less <filename>
+
+#to compare:
+cmp <file1> <file2>
+
+#to show difference:
+diff <file1> <file2>
+
+find / -name "some_name"
+
+
+#NETWORK:
+#route to resource:
+traceroute google.com
+#ports opened:
+netstat -tulpn
+ss -tulpn
+#firewall:
+iptables
+ufw allow 80
+ufw status
+
+#instead of uname we can use neofetch:
+sudo apt install netfetch
+netfetch
+
+#calendar:
+cal
+
+#calculator:
+echo "4+5+6+7" | bc
+
+#to kill process:
+kill -9 <PID>
+#kill by name:
+pkill -f <process_name>
