@@ -1,0 +1,62 @@
+#hide archive inside the photo:
+copy /b kitten.jpg+nc_secrets.zip secretphoto.jpg
+
+#encrypt files in folder:
+cipher /E
+
+#hide folder
+#enable:
+attrib +h +s +r <folder_name>
+#disable:
+attrib -h -s -r <folder_name>
+
+#local WiFi passwords:
+#show profiles:
+netsh wlan show profile
+#see info+pass:
+netsh wlan show profile "<NAME>" key=clear
+
+#command to show profilename/password:
+for /f "skip=9 tokens=1,2 delims=:" %i in ('netsh wlan show profiles') do @if "%j" NEQ "" (echo SSID: %j & netsh wlan show profiles %j key=clear | findstr "Key Content") & echo.
+#put result to the file:
+for /f "skip=9 tokens=1,2 delims=:" %i in ('netsh wlan show profiles') do @if "%j" NEQ "" (echo SSID: %j & netsh wlan show profiles %j key=clear | findstr "Key Content") & echo. >> wifipasswords.txt
+
+#To get system info:
+#systeminfo
+
+#copy file via scp:
+scp text_file.txt root@153.25.115.142:~/wifi.bat
+
+#mount folder as "s" drive:
+subst s: "C:\Users\user\Documents\Folder"
+#unmount
+subst /d s:
+
+#CURL
+#From Windows 10+ curl is available
+curl wttr.in/Kyiv
+#Check availability:
+curl -Is https://ukr.net
+#check external ip:
+curl checkip.amazonaws.com
+#create QR-code from url:
+curl qrenco.de/htts://somesite.com
+
+#files managing
+#delete temporary files:
+del /q /f /s %temp%\*
+del /s /q C:\Windows\temp\*
+
+#for some fun:)
+telnet telehack.com
+
+
+F1 - return each character from the last command
+F2 - copy previous command
+F3 - copy entire previous line
+F5 - show previous commands
+F7 - list of previous commands
+F9 - type command from the list by number (without execution)
+
+#show all history:
+doskey /history

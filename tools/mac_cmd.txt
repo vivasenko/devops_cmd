@@ -1,0 +1,26 @@
+#to say 
+say some text to say
+
+#to show saved wifi password
+security find-generic-password -wa "James Coffee Co"
+#to copy output to buffer (clipboard)
+security find-generic-password -wa "James Coffee Co" | pb copy
+
+#to make a screenshot Shift+Ctrl+Cmd+4 - to save screenshot to buffer
+
+#to check dns recordings:
+dig site.com
+
+#curl weather
+curl wttr.in/kyiv
+
+#Some fun:
+brew install cmatrix
+cmatrix
+asciiquarium
+toilet SomeText
+brew install samtay/tui/tetris
+tetris
+
+#to start simple http server on port 8000:
+python3 -m http.server
