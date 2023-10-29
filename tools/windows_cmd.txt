@@ -1,3 +1,30 @@
+#find dns
+ipconfig /all | findstr DNS
+
+#get new IP:
+ipconfig /release
+#to refresh
+ipconfig /renew
+#renew old DNS entries
+ipconfig /flushdns
+
+#copy to clipboard
+ipconfig /displaydns | clip
+
+nslookup site.com
+nslookup -type=mx site.com
+-type=ptr 
+
+#get all your mac addresses:
+getmac /v
+
+#to show which filetypes accociacted with which filetypes:
+assoc
+
+#check energy efficiency problems:
+powercfg /energy
+#show batteryreport:
+powercfg /batteryreport 
 #hide archive inside the photo:
 copy /b kitten.jpg+nc_secrets.zip secretphoto.jpg
 
@@ -60,3 +87,50 @@ F9 - type command from the list by number (without execution)
 
 #show all history:
 doskey /history
+
+#system file checker:
+sfc /scannow
+
+#check files on disk and fix them:
+chkdsk /f
+#check physical sectors and fix them (don't forget to restart)
+chkdsk /r 
+
+#fix system image:
+DISM /Online /Cleanup /CheckHealth
+DISM /Online /Cleanup /ScanHealth
+DISM /Online /Cleanup /RestoreHealth
+
+#TASKS:
+tasklist | findstr script
+taskkill <PID>
+
+#get wireles report
+netsh wlan show wlanreport
+#show all interfeces:
+netsh interface show interface
+netsh interface ip show address | findstr “IP Address”
+netsh interface ip show dnsservers
+netsh advfirewall set allprofiles state off
+netsh advfirewall set allprofiles state on
+
+#get route report:
+tracert site.com
+#without resolve a domain name:
+tracert -d site.com
+
+#check ports and connections:
+netstat
+netstat -af 
+netstat -o
+#get statistic every 5 seconds:
+netstat -e -t 5
+
+#get routing table:
+route print 
+
+route add 192.168.40.0 mask 255.255.255.0 10.7.1.44
+route delete 192.168.40.0
+
+#restart and get in bios:
+shutdown /r /fw /t 0
