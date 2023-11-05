@@ -1,18 +1,52 @@
-docker run -i -t debian:jessie
+docker run -i -t debian:jessie /bin/bashі
     -i --interactive : option for interract with container
     -t - allocates terminal for container
     -d - to run container as separate service
     -p - declare ports (HOST:CONTAINER)
     --name - container name
+    --hostname - hostname
     --rm - remove after stop/delete
     --restart - retart options - no (default) | on-failure[:max-retries] | always | unless-stopped
     -e - set environment
-    -v - to bin file system (name:/path/to/file)
+    -v - to bin file system (volume) (name:/path/to/file)
     -w - set working directory
+    /bin/bash - /bin/sh - to run shell inside container
 
 # example: 
 docker run -t -d -p 8080:80 nginx
 docker run -it -p 1234:8080 tomcat
+docker run --rm -it --link myredis:redis redis /bin/bash
+docker run -v /data test/webserver
+docker run -d -v /host/dir:/container/dir test/web-server
+docker run --rm --volumes-from myredis -v $(pwd)/backup:/backup debiab cp /data/dump.rdb /backup/
+# redis-cli -h redis -p 6379 - link new docker container with container with name "redis" (create in container in /etc/hosts entry redis with IP myredis)
+docker run test/cowsayimage_test /usr/games/cowsay "MOOOO"
+# if we will add : ENTRYPOINT ["/usr/games/cowsay"] , 
+docker build -t test/cowsay-imagetest1 .
+# we can use only:
+docker run test/cowsayimage_test1 "Moo"
+# We can use from script:
+#!/bin/bash
+if [ $# -eq 0 ]; then
+	/usr/games/fortune | /usr/games/cowsay
+   else 
+	/usr/games/cowsay "FTF?!?!?!"
+fi
+
+### DOCKERFILE:
+# Dockerfile example:
+FROM debian
+
+RUN apt-get update && apt-get install -y cowsay fortune
+COPY entrypoint.sh 
+ENTRYPOINT ["/entrypoint.sh"]
+
+# Where:
+    #FROM - base OS image
+    #RUN - command
+    #COPY - copy file from host to docker image
+    #VOLUME /data
+
 
 # to build image from Dockerfile in current folder:
 docker build -t test .
@@ -32,12 +66,21 @@ docker rm
 # run docker containers from docker-compose file:
 docker-compose up -f (file.yaml) 
 
-docker ps -aq 
+docker ps -aq
+# remove container:
+docker rm <CONTAINER_NAME/ID> - remove container 
+# remove all stopped containers:
+docker rm -v $(docker ps -aq -f status=existed) 
+# remove all containers:
 docker rm $(docker ps -aq)
 docker images 
+# create image from container:
+docker commit cowsay test/cowsayimage_test
 docker rmi (ID image)
 docker system prune
 docker exec-it (ID)
-docker inspect (ID)
+docker inspect <CONTAINER_NAME/ID>
+docker inspect --format {{.NetworkSettings.IPAddress}} <CONTAINER_NAME or ID> - grep alternative  
 docker pull <name> 
 docker ps -a
+docker diff <CONTAINER_NAME/ID> - changed files

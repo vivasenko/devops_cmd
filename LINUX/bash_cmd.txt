@@ -57,3 +57,27 @@ file1 -ot file2  #check if file1 older than file2
     else
     echo "The $mydir directory does not exist"
     fi
+
+#Inside script:
+IFS=: #exclude output from file
+IFS=$'\n'  
+
+
+### CONSTRUCTIONS ###
+#if construction:
+if grep <username> /etc/passwd
+then
+  echo ""
+else (elif, else)
+  echo ""
+fi
+
+#for construction:
+for var in list (in first second third fourth fifth)
+do
+done
+
+#while construction:
+while
+do
+done
