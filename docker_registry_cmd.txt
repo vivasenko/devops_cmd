@@ -1,0 +1,16 @@
+### DOCKER REGISTRY ### 
+docker registry ls REPOSITORY[:TAG] [OPTIONS]
+
+--digests		Show digests
+--format		Pretty-print output using a Go template
+--quiet , -q		Only display image names
+--verbose		Display verbose image information
+
+docker registry events	List registry events (DTR Only)
+docker registry history	Inspect registry image history (DTR Only)
+docker registry info	Display information about a registry (DTR Only)
+docker registry inspect	Inspect registry image
+docker registry joblogs	List registry job logs (DTR Only)
+docker registry jobs	List registry jobs (DTR Only)
+docker registry ls	List registry images
+docker registry rmi	Remove a registry image (DTR Only)

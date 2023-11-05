@@ -1,0 +1,34 @@
+### IP TABLES:
+
+# systemctl restart iptables.service
+# systemctl enable iptables.service
+
+# Install and enable:
+yum -y install iptables-services
+systemctl enable iptables.service
+systemctl start iptables.service
+
+
+# check iptables rules:
+iptables -L -v -n
+
+
+
+
+# Change firewalld to iptables:
+systemctl disable firewalld
+systemctl stop firewalld
+yum install iptables-services
+systemctl start iptables
+systemctl start ip6tables
+systemctl enable iptables
+systemctl enable ip6tables
+
+# to save iptables rules after reboot:
+/sbin/iptables-save > /etc/sysconfig/iptables
+/sbin/ip6tables-save > /etc/sysconfig/ip6tables
+# or
+service iptables save
+# current rules there:
+# /etc/sysconfig/iptables
+# /etc/sysconfig/ip6tables

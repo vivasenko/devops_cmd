@@ -1,0 +1,93 @@
+### FIREWALLD instead of clean iptables:
+
+# check state:
+firewall-cmd --state
+
+# stop firewall:
+systemctl stop firewalld (ufw)
+# disable firewall from autostart:
+ systemctl disable firewalld (ufw)
+
+# check firewall zones:
+firewall-cmd --get-zones
+
+# check active zone:
+firewall-cmd --get-active-zones
+
+# check zone name for selected interface: 
+firewall-cmd --get-zone-of-interface=enp1s0
+public
+
+# check to which interface assigned selected zone: 
+firewall-cmd --zone=public --list-interfaces
+enp1s0
+
+# EXAMPLES:
+# allow SSH on non-standart port 2234:
+# list all:
+firewall-cmd --permanent --list-all
+public (default)
+  interfaces:
+  sources:
+  services: ssh dhcpv6-client
+  masquerade: no
+  forward-ports:
+  icmp-blocks:
+  rich rules:
+
+# remove IPv6 as we don't use it:
+firewall-cmd --permanent --zone=public --remove-service=dhcpv6-client
+
+# make permanent:
+firewall-cmd --permanent --zone=public --add-port=2234/tcp
+# reload rules: 
+firewall-cmd --reload
+# edit sshd_config:
+nano /etc/ssh/sshd_config
+# change port to 2234
+# restart related service: 
+systemctl restart sshd.service
+
+# If Selinux enabled you need to set:
+yum provides semanage
+yum install policycoreutils-python
+semanage port -a -t ssh_port_t -p tcp 2234
+
+# If you want to close access/remove the rule:
+firewall-cmd --permanent --zone=public --remove-service=ssh
+firewall-cmd --reload
+
+##Useful commands:
+# enable blocking all internal and external packets:
+firewall-cmd --panic-on
+# disable above command:
+firewall-cmd --panic-off
+# to check status:
+firewall-cmd --query-panic
+
+# reload rules without disconnect of active connections: 
+firewall-cmd --reload
+# reload rules with connections reload:
+firewall-cmd --complete-reload
+# to add network interface to the zone:
+firewall-cmd --zone=public --add-interface=em1
+# to add permanent network interface to the zone:
+firewall-cmd --zone=public --permanent --add-interface=em1
+You also can in the config ifcfg-enp1s0 set to which zone network interface assigned. For that add ZONE=work to the file /etc/sysconfig/network-scripts/ifcfg-enp1s0. If value Zone not defined it will use zone which set by default (DefaultZone in the file /etc/firewalld/firewalld.conf). 
+# allow ports:
+firewall-cmd --zone=public --add-port=5059-5061/udp
+
+## masquerade:
+
+# check status:
+firewall-cmd --zone=external --query-masquerade
+# to enable:
+firewall-cmd --zone=external --add-masquerade
+
+# redirect input from 22 port to another host: 
+firewall-cmd --zone=external --add-forward-port=port=22:proto=tcp:toaddr=192.168.1.23
+
+# same but with port: 
+firewall-cmd --zone=external /
+--add-forward-port=port=22:proto=tcp:toport=2055:toaddr=192.168.1.23
+

@@ -1,0 +1,13 @@
+### DOCKERFILE:
+# Dockerfile example:
+FROM debian
+
+RUN apt-get update && apt-get install -y cowsay fortune
+COPY entrypoint.sh 
+ENTRYPOINT ["/entrypoint.sh"]
+
+# Where:
+    #FROM - base OS image
+    #RUN - command
+    #COPY - copy file from host to docker image
+    #VOLUME /data
