@@ -1,0 +1,13 @@
+Symhptoms:
+Windodws don't want to update. 
+Server not appears in WSUS computers. 
+
+Reset SusClientId:
+1). In cmd, net stop wuauserv
+
+2). Delete the value in registry key " SusClientId " and "SusClientIDValidation" locates in:
+
+HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate
+
+3). In cmd, net start wuauserv
+     wuauclt.exe /resetauthorization /detectnow
