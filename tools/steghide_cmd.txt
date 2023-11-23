@@ -1,0 +1,6 @@
+#### STEGHIDE - tool for hiding files inside photo with encryption. (WIN/LIN)
+
+apt install steghide -y
+
+steghide embed -ef tpassfile.txt -cf ~/Downloads/image_example.jpg
+steghide extract -sf "image_example.jpg" -xf text_file.txt
