@@ -31,3 +31,15 @@ helm rollback dashboard 1 -n monitoring
 
 # create chart app
 helm create app
+
+
+
+
+#useful:
+helm plugin install https://github.com/databus23/helm-diff
+helm plugin list
+#examples:
+helm diff upgrade kanban-frontend ./app --namespace kanban
+helm diff upgrade kanban-frontend ./app --namespace kanban --values kanban-frontend.yaml
+#compare selected revision (version) with the current (the latest one):
+helm diff revision kanban-frontend 1 --namespace kanban

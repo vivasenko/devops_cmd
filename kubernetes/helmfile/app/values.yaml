@@ -1,0 +1,16 @@
+app:
+  name: ''
+  group: default-app-group
+  replicaCount: 1
+  container:
+    image: add-image-here
+    port: 8080
+    env: []
+  service:
+    type: ClusterIP
+    port: 8080
+
+test:
+  enabled: true
+  connection:
+    endpoint: '/'

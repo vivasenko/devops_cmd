@@ -1,0 +1,4 @@
+helm dependency update ./kanban-backend
+helm dependency update ./kanban
+helm upgrade kanban ./kanban -n kanban-umbrella --create-namespace --install --wait 
+kubectl get pod -n kanban-umbrella

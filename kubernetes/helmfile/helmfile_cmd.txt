@@ -1,0 +1,17 @@
+#Syncs all resources from the state file (repos, releases and chart deps).
+helmfile sync
+
+#applies all resources from the state file only when there are changes.
+helmfile apply
+
+helmfile list
+
+#command we can run all the tests for each Helm release that are declared in each Helm charts.
+helmfile test --logs
+
+helmfile lint
+helmfile diff 
+helmfile template
+
+
+helmfile destroy 
