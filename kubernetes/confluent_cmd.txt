@@ -1,0 +1,24 @@
+
+# connect with your email and password:
+confluent login --save
+
+# choose env:
+confluent environment list
+confluent environment use env-qd252
+
+# set cluster to choosed env:
+confluent kafka cluster list
+confluent kafka cluster use lkc-r0x3p7
+
+# Before producing to the cluster, provide API key and secret:
+confluent api-key create --resource lkc-r0x3p7
+# provide where to use that key:
+confluent api-key use YWDRV3OPWFMD3QZU --resource lkc-r0x3p7
+
+# see topic list
+confluent kafka topic list
+
+# start reading messages from selected topic:
+confluent kafka topic consume --from-beginning topic_poems_demo
+# start producing (provide key and value, example 4:"new text")
+confluent kafka topic produce topic_poems_demo --parse-key
