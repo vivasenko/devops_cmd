@@ -6,10 +6,13 @@ confluent login --save
 confluent environment list
 confluent environment use env-qd252
 
+# describe kafka cluster:
+confluent kafka cluster describe
 # set cluster to choosed env:
 confluent kafka cluster list
 confluent kafka cluster use lkc-r0x3p7
 
+###  API KEY and SECRET
 # Before producing to the cluster, provide API key and secret:
 confluent api-key create --resource lkc-r0x3p7
 # provide where to use that key:
@@ -22,3 +25,28 @@ confluent kafka topic list
 confluent kafka topic consume --from-beginning topic_poems_demo
 # start producing (provide key and value, example 4:"new text")
 confluent kafka topic produce topic_poems_demo --parse-key
+
+# describe configuration:
+confluent kafka topic describe <topic name>
+
+# create partition (2 new topics):
+confluent kafka topic create --partitions 1 poems_1
+confluent kafka topic create --partitions 4 poems_2
+
+########### From confluent-7.5.2 folder:
+# (scheme like: Console Producer -> Kafka Server -> Console Consumer)
+#Steps:
+#1. Start a Zookeeper:
+bin/zookeeper-server-start etc/kafka/zookeeper.properties 
+#2. Start Kafka server instance:
+bin/kafka-server-start etc/kafka/server-0.properties
+
+# create a topic:
+bin/kafka-topics --create --topic test_topic --partitions 1 --replication-factor 1 --bootstrap-server localhost:9092
+# add data to the topic:
+bin/kafka-console-producer --topic test_topic --broker-list localhost:9092 < ../data/sample1.csv
+# read data from the topic from beginning:
+bin/kafka-console-consumer --topic test_topic --bootstrap-server localhost:9092 --from-beginning
+
+# dump kafka log:
+bin/kafka-dump-log --files path/to/file/tmp/kafka-logs-0/stock-ticks-1/00000000000000.log
